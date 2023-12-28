@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 public abstract class ServerBase {
 
     protected final DataParser dataParser = DataParser.getInstance();
-    protected final ByteBuffer dataBuffer = ByteBuffer.allocate(2056);
+    protected ByteBuffer dataBuffer = ByteBuffer.allocate(2056);
     private boolean running = false;
     private final String host;
     private final int port;
@@ -69,8 +69,17 @@ public abstract class ServerBase {
             }
             dataBuffer.flip();
             var deserializedData = dataParser.deserialize(dataBuffer);
+            var result = process(deserializedData);
+            String serializedData;
+            if(result instanceof String str) {
+                serializedData = str;
+            } else {
+                serializedData = dataParser.serialize(result);
+            }
             dataBuffer.clear();
-            process(deserializedData);
+            dataBuffer = ByteBuffer.wrap(serializedData.getBytes());
+            channel.write(dataBuffer);
+            dataBuffer = ByteBuffer.allocate(2056);
         }
     }
 
@@ -91,5 +100,5 @@ public abstract class ServerBase {
         client.register(selector, SelectionKey.OP_READ);
     }
 
-    protected abstract void process(String data);
+    protected abstract Object process(String data);
 }

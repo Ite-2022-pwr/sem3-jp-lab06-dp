@@ -5,12 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import lombok.Data;
+import pl.pwr.ite.customer.service.WarehouseClient;
+import pl.pwr.ite.model.enums.UserRole;
 import pl.pwr.ite.model.remote.MethodArgument;
 import pl.pwr.ite.model.remote.Payload;
 import pl.pwr.ite.model.remote.RemoteMethod;
 import pl.pwr.ite.service.ClientBase;
 import pl.pwr.ite.service.DataParser;
-import pl.pwr.ite.service.TestClient;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -27,10 +28,10 @@ public class CustomerController {
 
     private boolean clientRunning;
 
-    private final TestClient client;
+    private final WarehouseClient client;
 
     public CustomerController() {
-        this.client = new TestClient();
+        this.client = new WarehouseClient();
     }
 
     @FXML
@@ -50,6 +51,8 @@ public class CustomerController {
 
     @FXML
     protected void sendButtonClick(ActionEvent e) {
-
+        var clientSocket = client.register(UserRole.Customer, "localhost", 2137);
+        var user = clientSocket.getUser();
+        System.out.println(user.getId());
     }
 }

@@ -1,14 +1,18 @@
 package pl.pwr.ite.model;
 
 import lombok.Data;
-import pl.pwr.ite.model.enums.UserRole;
 
 import java.util.UUID;
 
 @Data
-public class User {
+public class UserSocket {
 
     private UUID id;
 
-    private UserRole role;
+    private User user;
+
+    private String host;
+
+    private Integer port;
 }
+

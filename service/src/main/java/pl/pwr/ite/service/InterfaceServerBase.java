@@ -16,7 +16,7 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
     }
 
     @Override
-    protected void process(String data) {
+    protected Object process(String data) {
         var payload = dataParser.deserialize(data, Payload.class);
         var methodName = payload.getMethod().getMethodName();
         var methodArguments = payload.getMethod().getArguments();
@@ -32,15 +32,23 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
         try {
             var _instance = Class.forName(communicationInterfaceType.getName()).getDeclaredConstructor().newInstance();
             var method = _instance.getClass().getDeclaredMethod(methodName, argumentTypes.toArray(new Class<?>[0]));
+            if(!Void.TYPE.equals(method.getReturnType())) {
+                var methodResult = method.invoke(_instance, arguments.toArray());
+                return methodResult;
+            }
             method.invoke(_instance, arguments.toArray());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 
-    private Object parseValue(Class<?> type, Object value) {
+    private Object parseValue(Class type, Object value) {
         if(type.equals(UUID.class)) {
             return UUID.fromString((String) value);
+        }
+        if(type.isEnum()) {
+            return Enum.valueOf(type, (String) value);
         }
         return value;
     }

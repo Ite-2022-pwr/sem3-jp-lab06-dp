@@ -7,9 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public abstract class ClientBase {
-    private final DataParser dataParser = DataParser.getInstance();
+    protected final DataParser dataParser = DataParser.getInstance();
     private SocketChannel clientSocket;
-    private ByteBuffer dataBuffer = ByteBuffer.allocate(2056);
     private final String host;
     private final int port;
 
@@ -36,10 +35,14 @@ public abstract class ClientBase {
 
 
     @SneakyThrows
-    public void send(String data) {
-        dataBuffer = ByteBuffer.wrap(data.getBytes());
+    public String send(String data) {
+        var dataBuffer = ByteBuffer.wrap(data.getBytes());
         clientSocket.write(dataBuffer);
+        dataBuffer = ByteBuffer.allocate(1024);
+        clientSocket.read(dataBuffer);
+        var responseString = dataParser.deserialize(dataBuffer);
         dataBuffer.clear();
         restartConnection();
+        return responseString;
     }
 }
