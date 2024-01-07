@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class MethodArgument {
     private Class<?> type;
-    private Object value;
+    private String value;
 }

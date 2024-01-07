@@ -4,20 +4,31 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pl.pwr.ite.customer.view.controller.CustomerController;
 
 import java.io.IOException;
 
 public class CustomerApplication extends Application {
+
+    private FXMLLoader fxmlLoader;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(CustomerApplication.class.getResource("customer-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        fxmlLoader = new FXMLLoader(CustomerApplication.class.getResource("customer-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1500, 800);
         stage.setTitle("Customer");
+        fxmlLoader.getController();
         stage.setScene(scene);
         stage.show();
     }
 
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        var controller = (CustomerController) fxmlLoader.getController();
+        controller.getWarehouseClient().disconnect();
     }
 }

@@ -12,15 +12,16 @@ import java.nio.channels.SocketChannel;
 public abstract class ServerBase {
 
     protected final DataParser dataParser = DataParser.getInstance();
-    protected ByteBuffer dataBuffer = ByteBuffer.allocate(2056);
-    private boolean running = false;
-    private final String host;
-    private final int port;
+    protected ByteBuffer dataBuffer = ByteBuffer.allocate(32768);
+    private volatile boolean running = false;
+    private String host;
+    private int port;
     private Thread serverThread;
 
-    protected ServerBase(String host, int port) {
+    public void start(String host, Integer port) {
         this.host = host;
         this.port = port;
+        this.start();
     }
 
     public void start() {
@@ -66,20 +67,21 @@ public abstract class ServerBase {
             int readBytes = channel.read(dataBuffer);
             if(readBytes == -1) {
                 closeConnection(key, channel);
+                return;
             }
             dataBuffer.flip();
             var deserializedData = dataParser.deserialize(dataBuffer);
             var result = process(deserializedData);
-            String serializedData;
+            String serializedResult;
             if(result instanceof String str) {
-                serializedData = str;
+                serializedResult = str;
             } else {
-                serializedData = dataParser.serialize(result);
+                serializedResult = dataParser.serialize(result);
             }
             dataBuffer.clear();
-            dataBuffer = ByteBuffer.wrap(serializedData.getBytes());
+            dataBuffer = ByteBuffer.wrap(serializedResult.getBytes());
             channel.write(dataBuffer);
-            dataBuffer = ByteBuffer.allocate(2056);
+            dataBuffer = ByteBuffer.allocate(32768);
         }
     }
 

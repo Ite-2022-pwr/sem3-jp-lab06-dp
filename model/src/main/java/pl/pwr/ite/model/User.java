@@ -1,14 +1,15 @@
 package pl.pwr.ite.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import pl.pwr.ite.model.enums.UserRole;
 
 import java.util.UUID;
 
-@Data
-public class User {
-
-    private UUID id;
+@Getter
+@Setter
+public class User extends EntityBase {
 
     private UserRole role;
 }

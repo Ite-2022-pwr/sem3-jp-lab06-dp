@@ -6,4 +6,6 @@ module service {
     requires model;
     exports pl.pwr.ite.service;
     exports pl.pwr.ite.service.remote;
+    exports pl.pwr.ite.service.remote.client;
+    exports pl.pwr.ite.service.javafx;
 }

@@ -1,5 +1,6 @@
 package pl.pwr.ite.service;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
@@ -11,6 +12,8 @@ public abstract class ClientBase {
     private SocketChannel clientSocket;
     private final String host;
     private final int port;
+    @Getter
+    private boolean connected;
 
     public ClientBase(String host, int port) {
         this.host = host;
@@ -18,31 +21,34 @@ public abstract class ClientBase {
     }
 
     @SneakyThrows
-    public void start() {
+    public void connect() {
         clientSocket = SocketChannel.open(new InetSocketAddress(host, port));
+        connected = true;
     }
 
     @SneakyThrows
     private void restartConnection() {
-        stop();
-        start();
+        disconnect();
+        connect();
     }
 
     @SneakyThrows
-    public void stop() {
+    public void disconnect() {
         clientSocket.close();
+        connected = false;
     }
 
 
     @SneakyThrows
-    public String send(String data) {
-        var dataBuffer = ByteBuffer.wrap(data.getBytes());
+    public String send(byte[] data) {
+        var dataBuffer = ByteBuffer.wrap(data);
         clientSocket.write(dataBuffer);
-        dataBuffer = ByteBuffer.allocate(1024);
+        dataBuffer = ByteBuffer.allocate(32768);
         clientSocket.read(dataBuffer);
         var responseString = dataParser.deserialize(dataBuffer);
         dataBuffer.clear();
         restartConnection();
         return responseString;
     }
+
 }

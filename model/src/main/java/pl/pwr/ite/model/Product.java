@@ -1,13 +1,16 @@
 package pl.pwr.ite.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
-@Data
-public class Product {
-
-    private UUID id;
+@Getter
+@Setter
+public class Product extends EntityBase {
 
     private String name;
+
+    private boolean ordered = false;
 }

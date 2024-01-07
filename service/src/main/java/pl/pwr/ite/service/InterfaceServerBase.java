@@ -1,5 +1,6 @@
 package pl.pwr.ite.service;
 
+import pl.pwr.ite.model.Order;
 import pl.pwr.ite.model.remote.Payload;
 import pl.pwr.ite.service.remote.CommunicationInterface;
 
@@ -10,8 +11,7 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
 
     private final Class<I> communicationInterfaceType;
 
-    protected InterfaceServerBase(String host, int port, Class<I> communicationInterfaceType) {
-        super(host, port);
+    protected InterfaceServerBase(Class<I> communicationInterfaceType) {
         this.communicationInterfaceType = communicationInterfaceType;
     }
 
@@ -25,9 +25,9 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
         var arguments = new ArrayList<>();
         for(var methodArgument : methodArguments) {
             var type = methodArgument.getType();
-            var value = methodArgument.getValue();
+            var value = dataParser.deserialize(methodArgument.getValue(), methodArgument.getType());
             argumentTypes.add(type);
-            arguments.add(parseValue(type, value));
+            arguments.add(value);
         }
         try {
             var _instance = Class.forName(communicationInterfaceType.getName()).getDeclaredConstructor().newInstance();
@@ -49,6 +49,9 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
         }
         if(type.isEnum()) {
             return Enum.valueOf(type, (String) value);
+        }
+        if(!type.equals(String.class) && value instanceof String str) {
+            return dataParser.deserialize(str, type);
         }
         return value;
     }

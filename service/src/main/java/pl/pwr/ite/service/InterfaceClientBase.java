@@ -25,15 +25,18 @@ public abstract class InterfaceClientBase<I extends CommunicationInterface> exte
         var remoteMethod = new RemoteMethod();
         var method = findMethodByName(methodName);
         remoteMethod.setMethodName(method.getName());
-        for(var argument : arguments) {
-            var methodArgument = new MethodArgument();
-            methodArgument.setType(argument.getClass());
-            methodArgument.setValue(argument);
-            remoteMethod.getArguments().add(methodArgument);
+        if(arguments != null) {
+            for(var argument : arguments) {
+                var methodArgument = new MethodArgument();
+                methodArgument.setType(argument.getClass());
+                methodArgument.setValue(dataParser.serialize(argument));
+                remoteMethod.getArguments().add(methodArgument);
+            }
         }
         var payload = new Payload();
         payload.setMethod(remoteMethod);
-        var responseRaw = send(dataParser.serialize(payload));
+        var serializedData = dataParser.serialize(payload);
+        var responseRaw = send(serializedData.getBytes());
         var returnType = method.getReturnType();
         if(returnType == Void.TYPE) {
             return null;

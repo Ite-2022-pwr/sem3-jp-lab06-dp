@@ -21,7 +21,7 @@ public class WarehouseController {
     @FXML
     protected void onHelloButtonClick() throws IOException {
         if(!serverRunning) {
-            server.start();
+            server.start("localhost", 5555);
             serverRunning = true;
             startButton.setDisable(true);
             welcomeText.setText("Server is on.");
