@@ -42,13 +42,14 @@ public abstract class ClientBase {
     @SneakyThrows
     public String send(byte[] data) {
         var dataBuffer = ByteBuffer.wrap(data);
+        connect();
         clientSocket.write(dataBuffer);
         dataBuffer = ByteBuffer.allocate(32768);
         clientSocket.read(dataBuffer);
+        disconnect();
         var responseString = dataParser.deserialize(dataBuffer);
         dataBuffer.clear();
-        restartConnection();
+//        restartConnection();
         return responseString;
     }
-
 }

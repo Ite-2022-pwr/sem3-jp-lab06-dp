@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pl.pwr.ite.customer.view.controller.CustomerController;
+import pl.pwr.ite.service.javafx.CommunicationController;
 
 import java.io.IOException;
 
@@ -29,6 +30,6 @@ public class CustomerApplication extends Application {
     public void stop() throws Exception {
         super.stop();
         var controller = (CustomerController) fxmlLoader.getController();
-        controller.getWarehouseClient().disconnect();
+        controller.stop();
     }
 }

@@ -48,7 +48,6 @@ public class CustomerController extends CommunicationController<CustomerServer.C
         var host = hostTextField.getText();
         var port = Integer.valueOf(portTextField.getText());
         try {
-            warehouseClient.connect();
             register(UserRole.Customer, host, port);
         } catch (Exception ex) {
             throw new JavaFXException(String.format(ex.getMessage()), ex);
@@ -97,19 +96,27 @@ public class CustomerController extends CommunicationController<CustomerServer.C
     }
 
     @FXML private void offersTabClicked(Event event) {
-        if(warehouseClient.isConnected()) {
+//        if(warehouseClient.isConnected()) {
+        try {
             productTable.getItems().clear();
             productTable.getItems().addAll(warehouseClient.getOffer());
+        } catch (Exception ex) {
+            throw new JavaFXException("Error fetching data.", ex);
         }
+//        }
     }
 
     @FXML private void ordersTabClicked(Event event) {
-        if(warehouseClient.isConnected()) {
+//        if(warehouseClient.isConnected()) {
+        try {
             ordersTable.getItems().clear();
             orderProductsTable.getItems().clear();
             var orders = warehouseClient.getOrders(applicationContext.getRegisteredUser().getId());
             ordersTable.getItems().addAll(orders);
+        } catch (Exception ex) {
+            throw new JavaFXException("Error fetching data.", ex);
         }
+//        }
     }
 
     @FXML private void placeOrderButtonClick(ActionEvent event) {

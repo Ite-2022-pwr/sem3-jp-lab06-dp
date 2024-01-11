@@ -42,7 +42,6 @@ public class ProviderController extends CommunicationController<ProviderServer.C
         var host = hostTextField.getText();
         var port = Integer.valueOf(portTextField.getText());
         try {
-            warehouseClient.connect();
             register(UserRole.Provider, host, port);
         } catch (Exception ex) {
             throw new JavaFXException(String.format(ex.getMessage()));
@@ -88,7 +87,7 @@ public class ProviderController extends CommunicationController<ProviderServer.C
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         var idColumn = new TableColumn<Product, String>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productsTable.getColumns().clear();
         productsTable.getColumns().addAll(nameColumn, idColumn);
     }
-
 }

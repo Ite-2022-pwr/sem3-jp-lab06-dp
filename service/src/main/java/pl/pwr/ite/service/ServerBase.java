@@ -59,6 +59,7 @@ public abstract class ServerBase {
 
     public void stop() {
         this.running = false;
+        serverThread.interrupt();
     }
 
     @SneakyThrows
@@ -78,7 +79,6 @@ public abstract class ServerBase {
             } else {
                 serializedResult = dataParser.serialize(result);
             }
-            dataBuffer.clear();
             dataBuffer = ByteBuffer.wrap(serializedResult.getBytes());
             channel.write(dataBuffer);
             dataBuffer = ByteBuffer.allocate(32768);

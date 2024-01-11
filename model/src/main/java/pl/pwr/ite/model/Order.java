@@ -6,7 +6,6 @@ import pl.pwr.ite.model.enums.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,4 +19,3 @@ public class Order extends EntityBase {
 
     private List<Product> products = new ArrayList<>();
 }
-

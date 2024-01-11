@@ -26,7 +26,6 @@ public class DealerController extends CommunicationController<DealerServer.Commu
         var host = hostTextField.getText();
         var port = Integer.valueOf(portTextField.getText());
         try {
-            warehouseClient.connect();
             register(UserRole.Dealer, host, port);
         } catch (Exception ex) {
             throw new JavaFXException(String.format(ex.getMessage()), ex);

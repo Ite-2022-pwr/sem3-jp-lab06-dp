@@ -4,15 +4,20 @@ import pl.pwr.ite.model.Order;
 import pl.pwr.ite.model.remote.Payload;
 import pl.pwr.ite.service.remote.CommunicationInterface;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class InterfaceServerBase<I extends CommunicationInterface> extends ServerBase {
 
-    private final Class<I> communicationInterfaceType;
+    private final Object _instance;
 
     protected InterfaceServerBase(Class<I> communicationInterfaceType) {
-        this.communicationInterfaceType = communicationInterfaceType;
+        try {
+            _instance = Class.forName(communicationInterfaceType.getName()).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -30,29 +35,14 @@ public abstract class InterfaceServerBase<I extends CommunicationInterface> exte
             arguments.add(value);
         }
         try {
-            var _instance = Class.forName(communicationInterfaceType.getName()).getDeclaredConstructor().newInstance();
             var method = _instance.getClass().getDeclaredMethod(methodName, argumentTypes.toArray(new Class<?>[0]));
             if(!Void.TYPE.equals(method.getReturnType())) {
-                var methodResult = method.invoke(_instance, arguments.toArray());
-                return methodResult;
+                return method.invoke(_instance, arguments.toArray());
             }
             method.invoke(_instance, arguments.toArray());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         }
         return null;
-    }
-
-    private Object parseValue(Class type, Object value) {
-        if(type.equals(UUID.class)) {
-            return UUID.fromString((String) value);
-        }
-        if(type.isEnum()) {
-            return Enum.valueOf(type, (String) value);
-        }
-        if(!type.equals(String.class) && value instanceof String str) {
-            return dataParser.deserialize(str, type);
-        }
-        return value;
     }
 }

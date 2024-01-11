@@ -52,6 +52,9 @@
        <TableColumn prefWidth="75.0" text="Name" />
        <TableColumn prefWidth="75.0" text="ID" />
      </columns>
+       <columnResizePolicy>
+           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+       </columnResizePolicy>
    </TableView>
    <Button fx:id="fillOrderButtonClick" disable="true" mnemonicParsing="false" onAction="#fillOrderButtonClick" text="Fill order" />
 </VBox>

@@ -32,4 +32,8 @@ public class WarehouseController {
             welcomeText.setText("Server is off.");
         }
     }
+
+    public void stop() {
+        server.stop();
+    }
 }

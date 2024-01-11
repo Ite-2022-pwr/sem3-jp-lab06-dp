@@ -10,7 +10,7 @@ import pl.pwr.ite.service.remote.client.WarehouseClient;
 
 public abstract class CommunicationController<I extends CommunicationInterface, S extends InterfaceServerBase<I>> {
 
-    protected final ApplicationContext applicationContext = new ApplicationContext();
+    @Getter protected final ApplicationContext applicationContext = new ApplicationContext();
     @Getter protected final WarehouseClient warehouseClient = new WarehouseClient();
     protected final S server;
 
@@ -34,5 +34,9 @@ public abstract class CommunicationController<I extends CommunicationInterface, 
         applicationContext.setRegisteredSocket(null);
     }
 
-
+    public void stop() {
+        getWarehouseClient().unregister(getApplicationContext().getRegisteredUser().getId());
+        getWarehouseClient().disconnect();
+        server.stop();
+    }
 }
