@@ -43,8 +43,8 @@ public class WarehouseClient extends InterfaceClientBase<WarehouseCommunicationI
     }
 
     @Override
-    public void returnOrder(UUID orderId) {
-        send("returnOrder", orderId);
+    public void returnOrder(Order order) {
+        send("returnOrder", order);
     }
 
     @Override

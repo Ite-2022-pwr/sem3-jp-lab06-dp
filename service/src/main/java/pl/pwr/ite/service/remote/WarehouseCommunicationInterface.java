@@ -16,7 +16,7 @@ public interface WarehouseCommunicationInterface extends CommunicationInterface 
     Product[] getOffer();
     Order putOrder(UUID userId, ArrayList<UUID> productIds);
     void updateOrder(Order order);
-    void returnOrder(UUID orderId);
+    void returnOrder(Order order);
     Order getOrder();
     UserSocket getInfoByUserId(UUID userId);
     UserSocket getInfoByUserRole(UserRole role);

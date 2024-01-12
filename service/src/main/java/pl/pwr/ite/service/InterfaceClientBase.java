@@ -54,7 +54,6 @@ public abstract class InterfaceClientBase<I extends CommunicationInterface> exte
         } catch (ClassNotFoundException ex) {
             throw new IllegalArgumentException(String.format("No class with name '%s' found.", canonicalName));
         }
-
     }
 
     private Method findMethodByName(String methodName) {

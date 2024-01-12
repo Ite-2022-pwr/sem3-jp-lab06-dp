@@ -88,8 +88,8 @@ public class WarehouseServer extends InterfaceServerBase<WarehouseServer.Communi
         }
 
         @Override
-        public void returnOrder(UUID orderId) {
-            var order = orderRepository.findById(orderId);
+        public void returnOrder(Order order) {
+//            var order = orderRepository.findById(ord.getId());
             for(var product : order.getProducts()) {
                 productRepository.add(product);
                 product.setOrdered(false);

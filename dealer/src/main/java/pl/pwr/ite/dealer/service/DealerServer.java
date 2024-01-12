@@ -2,6 +2,7 @@ package pl.pwr.ite.dealer.service;
 
 import pl.pwr.ite.model.Order;
 import pl.pwr.ite.model.enums.OrderStatus;
+import pl.pwr.ite.model.enums.ProductStatus;
 import pl.pwr.ite.service.InterfaceServerBase;
 import pl.pwr.ite.service.remote.DealerCommunicationInterface;
 import pl.pwr.ite.service.remote.client.WarehouseClient;
@@ -18,8 +19,19 @@ public class DealerServer extends InterfaceServerBase<DealerServer.Communication
 
         @Override
         public void acceptOrder(Order order) {
-            order.setStatus(OrderStatus.Paid);
-            warehouseClient.updateOrder(order);
+            var buyOrder = new Order();
+            var returnOrder = new Order();
+            buyOrder.setStatus(OrderStatus.Paid);
+            returnOrder.setStatus(OrderStatus.Delivered);
+            for(var product : order.getProducts()) {
+                if(ProductStatus.Buy.equals(product.getStatus()) || ProductStatus.Other.equals(product.getStatus())) {
+                    buyOrder.getProducts().add(product);
+                } else {
+                    returnOrder.getProducts().add(product);
+                }
+            }
+            warehouseClient.returnOrder(returnOrder);
+            warehouseClient.updateOrder(buyOrder);
         }
 
         public static void setWarehouseClient(WarehouseClient warehouseClient) {

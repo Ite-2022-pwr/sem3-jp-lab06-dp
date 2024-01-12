@@ -16,7 +16,7 @@ public class ProviderServer extends InterfaceServerBase<ProviderServer.Communica
 
         @Override
         public void returnOrder(Order order) {
-            warehouseClient.returnOrder(order.getId());
+            warehouseClient.returnOrder(order);
         }
 
         public static void setWarehouseClient(WarehouseClient warehouseClient) {

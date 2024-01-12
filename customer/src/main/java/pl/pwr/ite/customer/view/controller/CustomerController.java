@@ -12,6 +12,7 @@ import pl.pwr.ite.customer.service.exception.JavaFXException;
 import pl.pwr.ite.model.Order;
 import pl.pwr.ite.model.Product;
 import pl.pwr.ite.model.enums.OrderStatus;
+import pl.pwr.ite.model.enums.ProductStatus;
 import pl.pwr.ite.model.enums.UserRole;
 import pl.pwr.ite.service.javafx.CommunicationController;
 import pl.pwr.ite.service.remote.client.DealerClient;
@@ -149,6 +150,34 @@ public class CustomerController extends CommunicationController<CustomerServer.C
         ordersTabClicked(null);
     }
 
+    @FXML private void buyProductButtonClick(ActionEvent event) {
+        var order = ordersTable.getSelectionModel().getSelectedItem();
+        if(order == null) {
+            return;
+        }
+        var product = orderProductsTable.getSelectionModel().getSelectedItem();
+        if(product == null) {
+            return;
+        }
+        var orderProduct = order.getProducts().stream().filter(p -> p.getId().equals(product.getId())).findFirst().orElse(null);
+        orderProduct.setStatus(ProductStatus.Buy);
+        orderTableCellClicked(null);
+    }
+
+    @FXML private void returnProductButtonClick(ActionEvent event) {
+        var order = ordersTable.getSelectionModel().getSelectedItem();
+        if(order == null) {
+            return;
+        }
+        var product = orderProductsTable.getSelectionModel().getSelectedItem();
+        if(product == null) {
+            return;
+        }
+        var orderProduct = order.getProducts().stream().filter(p -> p.getId().equals(product.getId())).findFirst().orElse(null);
+        orderProduct.setStatus(ProductStatus.Return);
+        orderTableCellClicked(null);
+    }
+
     private void setupTables() {
         mainTabPane.setVisible(false);
 
@@ -175,8 +204,10 @@ public class CustomerController extends CommunicationController<CustomerServer.C
         orderProductsIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         var orderProductsNameColumn = new TableColumn<Product, String>("Name");
         orderProductsNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        var orderProductsStatusColumn = new TableColumn<Product, String>("Status");
+        orderProductsStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         orderProductsTable.getColumns().clear();
-        orderProductsTable.getColumns().addAll(orderProductsNameColumn, orderProductsIdColumn);
+        orderProductsTable.getColumns().addAll(orderProductsNameColumn, orderProductsIdColumn, orderProductsStatusColumn);
 
         productTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }

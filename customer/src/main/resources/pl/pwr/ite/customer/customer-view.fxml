@@ -92,8 +92,10 @@
                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                        </columnResizePolicy>
                      </TableView>
-                     <Button fx:id="returnButton" disable="true" mnemonicParsing="false" onAction="#returnButtonClick" text="Return" />
-                     <Button fx:id="payButton" disable="true" mnemonicParsing="false" onAction="#payButtonClick" text="Pay" />
+                     <Button fx:id="returnButton" disable="true" mnemonicParsing="false" onAction="#returnButtonClick" text="Return order" />
+                     <Button fx:id="payButton" disable="true" mnemonicParsing="false" onAction="#payButtonClick" text="Pay for order" />
+                     <Button mnemonicParsing="false" onAction="#returnProductButtonClick" text="Return product" />
+                     <Button mnemonicParsing="false" onAction="#buyProductButtonClick" text="Buy product" />
                   </children>
                </HBox>
             </children>
